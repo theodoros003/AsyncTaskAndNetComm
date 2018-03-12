@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">AsyncTaskAndNetComm</string>
+    <string name="convertBtn">Convert!</string>
+</resources>

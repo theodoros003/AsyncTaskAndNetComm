@@ -9,7 +9,7 @@
         android:layout_height="wrap_content">
 
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:id="@+id/btn1" android:text="@string/convertBtn"
+            android:id="@+id/btn1" android:text="@string/downloadBtn"
             android:layout_alignParentRight="true"/>
 
         <EditText

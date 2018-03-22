@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">AsyncTaskAndNetComm</string>
     <string name="downloadBtn">Download</string>
+    <string name="addSongsAct">Add Song Activity</string>
+    <string name="addsongBtn">Add Song</string>
 </resources>

@@ -14,43 +14,33 @@ import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URLEncoder;
-import android.app.AlertDialog;
-import java.io.OutputStream;
+import android.content.Intent;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    class MyTask extends AsyncTask<String,Void,String>
+    class TestTask2 extends AsyncTask<String,Void,String>
     {
         public String doInBackground(String... params)
         {
             HttpURLConnection conn = null;
             try
             {
-                URL url = new URL("http://www.free-map.org.uk/course/mad/ws/addhit.php");
+                String artist = URLEncoder.encode(params[0], "UTF-8");
+
+
+                URL url = new URL("http://www.free-map.org.uk/course/mad/ws/hits.php?artist="+artist);
                 conn = (HttpURLConnection) url.openConnection();
-
-                String song = URLEncoder.encode(params[0], "UTF-8");
-                String artist = URLEncoder.encode(params[1], "UTF-8");
-                String year = URLEncoder.encode(params[2], "UTF-8");
-                String postData = "song=" +song +
-                        "&artist=" +artist+
-                        "&year="+year;
-
-                // For POST
-                conn.setDoOutput(true);
-                conn.setFixedLengthStreamingMode(artist.length());
-
-                OutputStream out = null;
-                out = conn.getOutputStream();
-                out.write(artist.getBytes());
+                InputStream in = conn.getInputStream();
                 if(conn.getResponseCode() == 200)
                 {
-                    InputStream in = conn.getInputStream();
                     BufferedReader br = new BufferedReader(new InputStreamReader(in));
-                    String all = "", line;
+                    String result = "", line;
                     while((line = br.readLine()) !=null)
-                        all += line;
-                    return all;
+                    {
+                        result += line+"\n";
+                    }
+                    return result;
                 }
                 else
                 {
@@ -72,10 +62,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         public void onPostExecute(String result)
         {
-
-            new AlertDialog.Builder(MainActivity.this).
-                    setMessage("Server sent back: " + result).
-                    setPositiveButton("OK", null).show();
+            TextView tv = (TextView) findViewById(R.id.tv1);
+            tv.setText(result);
         }
     }
 
@@ -83,18 +71,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button b = (Button)findViewById(R.id.btn1);
-        b.setOnClickListener(this);
+        Button list = (Button)findViewById(R.id.btn1);
+        list.setOnClickListener(this);
+        Button  add= (Button)findViewById(R.id.btn2);
+        add.setOnClickListener(this);
     }
     public void onClick(View view)
     {
-        MyTask task = new MyTask();
-        EditText et = (EditText)findViewById(R.id.et1);
-        String song = et.getText().toString();
-        String artist = et.getText().toString();
-        String year = et.getText().toString();
-        task.execute(song,artist,year);
-
+        if (view.getId() == R.id.btn1){
+            TestTask2 task = new TestTask2();
+            EditText et = (EditText)findViewById(R.id.et1);
+            String artist = et.getText().toString();
+            task.execute(artist);
+        }
+        else if (view.getId() == R.id.btn2){
+            Intent intent = new Intent(this,AddSongsActivity.class);
+            startActivityForResult(intent,0);
+        }
     }
 
 }
